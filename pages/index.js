@@ -1,22 +1,42 @@
 import React from "react";
-import Header from "../components/Header";
+import Head from "next/head";
 import HeroSection from "../components/HeroSection";
 import ArticleGrid from "../components/ArticleGrid";
-import Footer from "../components/Footer";
+import Sidebar from "../components/Sidebar";
+import { getAllArticles } from "../lib/articles";
 
-export default function Home() {
+export default function Home({ articles }) {
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{ fontFamily: 'Newsreader, \"Noto Sans\", sans-serif' }}>
-      <div className="layout-container flex h-full grow flex-col">
-        <Header />
-        <div className="px-40 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <HeroSection />
-            <ArticleGrid />
+    <>
+      <Head>
+        <title>The AI NEWS – Latest AI News, Insights & Tools</title>
+        <meta name="description" content="Stay up to date with the latest news, insights, and tools in artificial intelligence. The AI NEWS brings you curated articles, expert opinions, and resources for the AI community." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="The AI NEWS – Latest AI News, Insights & Tools" />
+        <meta property="og:description" content="Stay up to date with the latest news, insights, and tools in artificial intelligence." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ainews.com/" />
+        <meta property="og:image" content="/og-image.png" />
+        <link rel="canonical" href="https://ainews.com/" />
+      </Head>
+      <div className="content-container">
+        <HeroSection />
+        <div className="home-content-with-sidebar">
+          <div id="articles" className="home-articles-section">
+            <ArticleGrid articles={articles} title="Latest Articles" />
           </div>
+          <Sidebar />
         </div>
-        <Footer />
       </div>
-    </div>
+    </>
   );
-} 
+}
+
+export async function getStaticProps() {
+  const articles = getAllArticles();
+  return {
+    props: {
+      articles,
+    },
+  };
+}

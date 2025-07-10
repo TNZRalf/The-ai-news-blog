@@ -1,20 +1,107 @@
-import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Head from 'next/head';
+import React from 'react';
+import Link from 'next/link';
+import { getAllArticles } from '../lib/articles';
 
-export default function Admin() {
+export default function Admin({ articles }) {
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{ fontFamily: 'Newsreader, \"Noto Sans\", sans-serif' }}>
-      <div className="layout-container flex h-full grow flex-col">
-        <Header />
-        <div className="px-40 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <h2 className="text-[#181411] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">Admin Panel</h2>
-            <p className="text-[#181411] text-base font-normal leading-normal pb-3 pt-1 px-4">Upload new formatted_articles.json here. (This is a placeholder page. You can add upload functionality and authentication here.)</p>
+    <>
+      <Head>
+        <title>AI News Admin – Content Management</title>
+        <meta name="description" content="Manage your AI News content and articles" />
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <div className="admin-container">
+        <aside className="admin-sidebar">
+          <div className="admin-sidebar-inner">
+            <h1 className="admin-logo">AI News Admin</h1>
+            <nav className="admin-nav">
+              <Link href="/admin" className="admin-nav-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                  <path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM152,88V44l44,44Z" />
+                </svg>
+                <span>Articles</span>
+              </Link>
+              <Link href="/admin/settings" className="admin-nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                  <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.6,107.6,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3.12-3.12L186-119.64a8,8,0,0,0-3.93-6,107.29,107.29,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.05a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.45a8,8,0,0,0-3.93,6L67.32,64.17q-1.56,1.48-3.12,3.12L40.47,70a8,8,0,0,0-6,3.93,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.05,148.8a8,8,0,0,0-1.48,7.06,107.6,107.6,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.48,1.56,3.12,3.12L70,215.53a8,8,0,0,0,3.93,6,107.29,107.29,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.6,107.6,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3.12-3.12L215.53,186a8,8,0,0,0,6-3.93,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06ZM128,192a64,64,0,1,1,64-64A64.07,64.07,0,0,1,128,192Z" />
+                </svg>
+                <span>Settings</span>
+              </Link>
+            </nav>
           </div>
-        </div>
-        <Footer />
+          <button className="btn-primary admin-new-article-btn">
+            New Article
+          </button>
+        </aside>
+        <main className="admin-main-content">
+          <header className="admin-header">
+            <h2>Articles</h2>
+            <p>Manage your website's content</p>
+          </header>
+
+          <div className="admin-content-area">
+            <div className="admin-search-bar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" />
+              </svg>
+              <input 
+                type="search"
+                placeholder="Search articles" 
+                aria-label="Search articles"
+              />
+            </div>
+
+            <div className="admin-table-container">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Published Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {articles.map((article) => (
+                    <tr key={article.id}>
+                      <td>
+                        <div className="admin-table-title">
+                          {article.title}
+                        </div>
+                      </td>
+                      <td>{article.author}</td>
+                      <td>
+                        <span className={`status-badge status-${article.status?.toLowerCase() || 'published'}`}>
+                          {article.status || 'Published'}
+                        </span>
+                      </td>
+                      <td>{article.date}</td>
+                      <td>
+                        <div className="admin-table-actions">
+                          <button className="action-btn">Edit</button>
+                          <button className="action-btn action-btn--danger">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </>
   );
-} 
+}
+
+export async function getStaticProps() {
+  const articles = getAllArticles();
+  return {
+    props: {
+      articles,
+    },
+  };
+}

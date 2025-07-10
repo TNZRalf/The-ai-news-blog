@@ -1,0 +1,28 @@
+{
+  "name": "the-ai-news-blog",
+  "version": "1.0.0",
+  "description": "A modern, content-first AI news blog built with Next.js and Tailwind CSS.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TNZRalf/The-ai-news-blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TNZRalf/The-ai-news-blog/issues"
+  },
+  "homepage": "https://github.com/TNZRalf/The-ai-news-blog#readme",
+  "dependencies": {
+    "next": "^15.3.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sass": "^1.89.2"
+  }
+}
