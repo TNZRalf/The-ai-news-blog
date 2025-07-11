@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /about
+Allow: /contact
+Allow: /support
+Allow: /topics
+Allow: /insights
+Allow: /ai-tools
+Allow: /subscribe
+
+# Block admin areas
+Disallow: /admin
+Disallow: /api/
+
+# Allow RSS and sitemap
+Allow: /api/rss
+Allow: /api/sitemap.xml
+
+# Sitemaps
+Sitemap: https://ainews.com/api/sitemap.xml
+Sitemap: https://ainews.com/api/rss
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1 

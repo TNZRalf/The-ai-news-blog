@@ -9,7 +9,9 @@ export default function Footer() {
     { href: '/contact', label: 'Contact' },
     { href: '/support', label: 'Support' },
     { href: '/topics', label: 'Topics' },
-    { href: '/insights', label: 'Insights' }
+    { href: '/insights', label: 'Insights' },
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Service' }
   ];
   
   const socialLinks = [
@@ -37,6 +39,15 @@ export default function Footer() {
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
           <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160ZM176,24H80A56.06,56.06,0,0,0,24,80v96a56.06,56.06,0,0,0,56,56h96a56.06,56.06,0,0,0,56-56V80A56.06,56.06,0,0,0,176,24Zm40,152a40,40,0,0,1-40,40H80a40,40,0,0,1-40-40V80A40,40,0,0,1,80,40h96a40,40,0,0,1,40,40ZM192,76a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"/>
+        </svg>
+      )
+    },
+    { 
+      href: '/api/rss', 
+      label: 'RSS Feed',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+          <path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM68,192a12,12,0,1,1,12-12A12,12,0,0,1,68,192Zm40,0a8,8,0,0,1-16,0,40,40,0,0,0-40-40,8,8,0,0,1,0-16,56,56,0,0,1,56,56Zm32,0a8,8,0,0,1-16,0,72,72,0,0,0-72-72,8,8,0,0,1,0-16,88,88,0,0,1,88,88Z"/>
         </svg>
       )
     }

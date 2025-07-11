@@ -1,13 +1,20 @@
+import Image from "next/image";
+
 export default function ArticleDetail({ image, title, author, date, tags = [], content }) {
   return (
     <article className="article-detail">
       {image && (
-        <div 
-          className="article-detail-image" 
-          style={{ backgroundImage: `url('${image}')` }}
-          role="img"
-          aria-label={`Cover image for ${title}`}
-        />
+        <div className="article-detail-image-container">
+          <Image
+            src={image}
+            alt={`Cover image for ${title}`}
+            width={800}
+            height={400}
+            sizes="(max-width: 768px) 100vw, 800px"
+            priority={true}
+            className="article-detail-image"
+          />
+        </div>
       )}
       
       <header className="article-detail-header">

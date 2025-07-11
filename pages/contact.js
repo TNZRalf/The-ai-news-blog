@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
+import emailjs from '@emailjs/browser';
+import { trackContactForm } from '../lib/gtag';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -48,13 +50,49 @@ export default function Contact() {
     setSubmitMessage('');
     
     try {
-      // Simulate form submission
+      // EmailJS configuration
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      // Check if environment variables are set
+      if (!serviceId || !templateId || !publicKey) {
+        console.warn('EmailJS not configured for contact form. Using simulation mode.');
+        // Fallback to simulation for now
       await new Promise(resolve => setTimeout(resolve, 1000));
+        setSubmitMessage('Thank you for your message! We\'ll get back to you soon. (Demo mode - configure EmailJS for production)');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setErrors({});
+        return;
+      }
+
+      // Real EmailJS integration
+      const templateParams = {
+        to_email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'the.ainews0@gmail.com',
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        reply_to: formData.email,
+        date: new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      
+      // Track successful contact form submission
+      trackContactForm();
       
       setSubmitMessage('Thank you for your message! We\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setErrors({});
     } catch (error) {
+      console.error('EmailJS error:', error);
       setSubmitMessage('Sorry, there was an error sending your message. Please try again.');
     } finally {
       setIsSubmitting(false);

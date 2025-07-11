@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/TNZRalf/The-ai-news-blog#readme",
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "formidable": "^3.5.1",
     "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

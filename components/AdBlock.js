@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export default function AdBlock({ 
   imageUrl = "https://images.unsplash.com/photo-1620712943543-2858200f7426?auto=format&fit=crop&w=800&q=80",
@@ -19,15 +20,16 @@ export default function AdBlock({
   return (
     <div className="ad-block" role="region" aria-label="Advertisement">
       {imageUrl && (
-        <img
-          className="ad-block-image"
-          src={imageUrl}
-          alt={alt}
-          loading="lazy"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
-        />
+        <div className="ad-block-image-container">
+          <Image
+            className="ad-block-image"
+            src={imageUrl}
+            alt={alt}
+            width={300}
+            height={200}
+            sizes="(max-width: 768px) 100vw, 300px"
+          />
+        </div>
       )}
       
       <div className="ad-block-content">

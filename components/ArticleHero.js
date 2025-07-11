@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export default function ArticleHero({
   image,
@@ -13,12 +14,17 @@ export default function ArticleHero({
   return (
     <article className="article-hero">
       {heroImage && (
-        <img
-          className="article-hero-image"
-          src={heroImage}
-          alt={title ? `Hero image for: ${title}` : "Article hero image"}
-          loading="lazy"
-        />
+        <div className="article-hero-image-container">
+          <Image
+            className="article-hero-image"
+            src={heroImage}
+            alt={title ? `Hero image for: ${title}` : "Article hero image"}
+            width={1200}
+            height={600}
+            sizes="100vw"
+            priority={true}
+          />
+        </div>
       )}
       
       {title && (

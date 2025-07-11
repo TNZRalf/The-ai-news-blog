@@ -46,15 +46,15 @@ export default function Topics({ articles }) {
     <>
       <Head>
         <title>Topics – The AI NEWS</title>
-        <meta name="description" content="Browse AI news and articles by topic. Explore the latest in artificial intelligence, ethics, healthcare, and more." />
+        <meta name="description" content="Browse AI articles by topic: Machine Learning, ChatGPT, AI Ethics, Healthcare AI, Deep Learning, and more. Find exactly what you're looking for in artificial intelligence." />
         <meta property="og:title" content="Topics – The AI NEWS" />
-        <meta property="og:description" content="Browse AI news and articles by topic. Explore the latest in artificial intelligence, ethics, healthcare, and more." />
+        <meta property="og:description" content="Browse AI articles by topic: Machine Learning, ChatGPT, AI Ethics, Healthcare AI, Deep Learning, and more. Find exactly what you're looking for." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://ainews.com/topics" />
         <meta property="og:image" content="/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Topics – The AI NEWS" />
-        <meta name="twitter:description" content="Browse AI news and articles by topic. Explore the latest in artificial intelligence, ethics, healthcare, and more." />
+        <meta name="twitter:description" content="Browse AI articles by topic: Machine Learning, ChatGPT, AI Ethics, Healthcare AI, Deep Learning, and more." />
         <meta name="twitter:image" content="/og-image.png" />
         <link rel="canonical" href="https://ainews.com/topics" />
       </Head>

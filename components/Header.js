@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Header() {
   const [navOpen, setNavOpen] = useState(false);
@@ -52,9 +53,12 @@ export default function Header() {
             </li>
           </ul>
         </nav>
-        <Link className="cta-button" href="/subscribe" onClick={closeNav}>
-          Subscribe
-        </Link>
+        <div className="header-actions">
+          <DarkModeToggle />
+          <Link className="cta-button" href="/subscribe" onClick={closeNav}>
+            Subscribe
+          </Link>
+        </div>
       </div>
     </header>
   );

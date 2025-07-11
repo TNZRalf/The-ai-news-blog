@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { getArticleBySlug, getAllArticles } from "../lib/articles";
+import { trackArticleView } from "../lib/gtag";
 import ArticleHero from "../components/ArticleHero";
 import SocialShare from "../components/SocialShare";
 import AdBlock from "../components/AdBlock";
@@ -10,6 +11,13 @@ import Sidebar from "../components/Sidebar";
 
 export default function ArticlePage({ article }) {
   const router = useRouter();
+
+  // Track article view when component mounts
+  useEffect(() => {
+    if (article) {
+      trackArticleView(article.title, article.slug);
+    }
+  }, [article]);
 
   if (router.isFallback) {
     return <div>Loading article...</div>;
