@@ -1,5 +1,6 @@
 import React from 'react';
 import NewsletterSignup from './NewsletterSignup';
+import { SidebarAd } from './AdSense';
 
 export default function Sidebar() {
   const tags = [
@@ -18,6 +19,9 @@ export default function Sidebar() {
         <h3 className="sidebar-title">Newsletter</h3>
         <NewsletterSignup />
       </section>
+      
+      {/* Sidebar ad - high visibility placement */}
+      <SidebarAd adSlot="1111111111" />
       
       <section className="sidebar-section">
         <h3 className="sidebar-title">Popular Tags</h3>
@@ -50,6 +54,9 @@ export default function Sidebar() {
           Support The AI NEWS
         </a>
       </section>
+      
+      {/* Bottom sidebar ad - catches users scrolling down */}
+      <SidebarAd adSlot="2222222222" />
     </aside>
   );
 } 

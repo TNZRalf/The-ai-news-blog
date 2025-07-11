@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import ArticleGrid from "../components/ArticleGrid";
+import { BannerAd } from "../components/AdSense";
 import { getAllArticles } from "../lib/articles";
 
 export default function Topics({ articles }) {
@@ -67,6 +68,9 @@ export default function Topics({ articles }) {
           </p>
         </section>
 
+        {/* Ad placement after header - high visibility */}
+        <BannerAd adSlot="3333333333" />
+
         <section className="topics-search">
           <div className="search-container">
             <div className="search-input-wrapper">
@@ -128,6 +132,9 @@ export default function Topics({ articles }) {
           </div>
         </section>
 
+        {/* Ad placement before results - captures engaged users */}
+        <BannerAd adSlot="4444444444" />
+
         <section className="topics-results">
           <div className="topics-results-header">
             <h2 className="topics-results-title">
@@ -148,10 +155,10 @@ export default function Topics({ articles }) {
                   </span>
                 )}
                 {selectedTopic !== 'all' && (
-                  <span className="filter-tag">
-                    Topic: {selectedTopic}
-                    <button onClick={() => handleTopicChange('all')} className="filter-remove">×</button>
-                  </span>
+                                      <span className="filter-tag">
+                      Topic: {selectedTopic}
+                      <button onClick={() => handleTopicChange('all')} className="filter-remove">×</button>
+                    </span>
                 )}
               </div>
             )}

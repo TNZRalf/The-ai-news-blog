@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BannerAd, ArticleAd } from "./AdSense";
 
 export default function ArticleDetail({ image, title, author, date, tags = [], content }) {
   return (
@@ -33,12 +34,18 @@ export default function ArticleDetail({ image, title, author, date, tags = [], c
         )}
       </header>
       
+      {/* Ad placement after header - high engagement area */}
+      <BannerAd adSlot="1234567890" />
+      
       {content && (
         <div 
           className="article-detail-content"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       )}
+      
+      {/* Ad placement at end of article - high engagement area */}
+      <ArticleAd adSlot="0987654321" />
     </article>
   );
 } 
