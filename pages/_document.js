@@ -2,8 +2,9 @@ import { Html, Head, Main, NextScript } from 'next/document';
 import React from 'react';
 
 export default function MyDocument() {
-  // Safely get GA tracking ID
+  // Safely get GA tracking ID and AdSense Publisher ID
   const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+  const ADSENSE_PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 
   return (
     <Html lang="en">
@@ -37,6 +38,27 @@ export default function MyDocument() {
                   gtag('js', new Date());
                   gtag('config', '${GA_TRACKING_ID}', {
                     page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
+
+        {/* Google AdSense with Auto Ads */}
+        {ADSENSE_PUBLISHER_ID && (
+          <>
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
+              crossOrigin="anonymous"
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (adsbygoogle = window.adsbygoogle || []).push({
+                    google_ad_client: "${ADSENSE_PUBLISHER_ID}",
+                    enable_page_level_ads: true
                   });
                 `,
               }}

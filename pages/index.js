@@ -3,6 +3,7 @@ import Head from "next/head";
 import HeroSection from "../components/HeroSection";
 import ArticleGrid from "../components/ArticleGrid";
 import Sidebar from "../components/Sidebar";
+import { BannerAd, ArticleAd } from "../components/AdSense";
 import { getAllArticles } from "../lib/articles";
 
 export default function Home({ articles }) {
@@ -21,9 +22,16 @@ export default function Home({ articles }) {
       </Head>
       <div className="content-container">
         <HeroSection />
+        
+        {/* Banner Ad - High visibility placement after hero */}
+        <BannerAd adSlot="1234567890" />
+        
         <div className="home-content-with-sidebar">
           <div id="articles" className="home-articles-section">
             <ArticleGrid articles={articles} title="Latest Articles" />
+            
+            {/* Article Ad - Mid-content placement for better engagement */}
+            <ArticleAd adSlot="0987654321" />
           </div>
           <Sidebar />
         </div>

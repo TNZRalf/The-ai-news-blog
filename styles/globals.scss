@@ -3887,3 +3887,76 @@ ul, ol {
     }
   }
 }
+
+/* GOOGLE ADSENSE STYLES */
+.adsense-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  
+  .adsbygoogle {
+    display: block;
+  }
+}
+
+.banner-ad {
+  width: 100%;
+  margin: 2rem 0;
+  text-align: center;
+  
+  .adsbygoogle {
+    max-width: 970px;
+    margin: 0 auto;
+  }
+}
+
+.sidebar-ad {
+  margin: 1.5rem 0;
+  text-align: center;
+  
+  .adsbygoogle {
+    width: 300px;
+    height: 600px;
+  }
+}
+
+.article-ad {
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+  
+  .adsbygoogle {
+    margin: 0 auto;
+  }
+}
+
+/* Mobile responsive ads */
+@media (max-width: 768px) {
+  .banner-ad .adsbygoogle {
+    width: 320px;
+    height: 100px;
+  }
+  
+  .sidebar-ad {
+    .adsbygoogle {
+      width: 300px;
+      height: 250px;
+    }
+  }
+  
+  .article-ad .adsbygoogle {
+    width: 300px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-ad .adsbygoogle,
+  .sidebar-ad .adsbygoogle,
+  .article-ad .adsbygoogle {
+    width: 300px;
+    height: 250px;
+  }
+}
