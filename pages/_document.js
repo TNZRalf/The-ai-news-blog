@@ -9,6 +9,9 @@ export default function MyDocument() {
   return (
     <Html lang="en">
       <Head>
+        {/* Google AdSense Verification Meta Tag */}
+        <meta name="google-adsense-account" content="ca-pub-7342607848085265" />
+        
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
