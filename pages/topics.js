@@ -69,7 +69,7 @@ export default function Topics({ articles }) {
         </section>
 
         {/* Ad placement after header - high visibility */}
-        <BannerAd adSlot="3333333333" />
+        <BannerAd adSlot="7922562280" />
 
         <section className="topics-search">
           <div className="search-container">
@@ -133,7 +133,7 @@ export default function Topics({ articles }) {
         </section>
 
         {/* Ad placement before results - captures engaged users */}
-        <BannerAd adSlot="4444444444" />
+        <BannerAd adSlot="7922562280" />
 
         <section className="topics-results">
           <div className="topics-results-header">

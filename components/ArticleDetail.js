@@ -35,7 +35,7 @@ export default function ArticleDetail({ image, title, author, date, tags = [], c
       </header>
       
       {/* Ad placement after header - high engagement area */}
-      <BannerAd adSlot="1234567890" />
+      <BannerAd adSlot="5295279381" />
       
       {content && (
         <div 
@@ -45,7 +45,7 @@ export default function ArticleDetail({ image, title, author, date, tags = [], c
       )}
       
       {/* Ad placement at end of article - high engagement area */}
-      <ArticleAd adSlot="0987654321" />
+      <ArticleAd adSlot="1694945729" />
     </article>
   );
 } 

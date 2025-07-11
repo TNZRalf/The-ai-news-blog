@@ -24,14 +24,14 @@ export default function Home({ articles }) {
         <HeroSection />
         
         {/* Banner Ad - High visibility placement after hero */}
-        <BannerAd adSlot="1234567890" />
+        <BannerAd adSlot="7921442724" />
         
         <div className="home-content-with-sidebar">
           <div id="articles" className="home-articles-section">
             <ArticleGrid articles={articles} title="Latest Articles" />
             
             {/* Article Ad - Mid-content placement for better engagement */}
-            <ArticleAd adSlot="0987654321" />
+            <ArticleAd adSlot="1694945729" />
           </div>
           <Sidebar />
         </div>

@@ -21,7 +21,7 @@ export default function Sidebar() {
       </section>
       
       {/* Sidebar ad - high visibility placement */}
-      <SidebarAd adSlot="1111111111" />
+      <SidebarAd adSlot="1931869002" />
       
       <section className="sidebar-section">
         <h3 className="sidebar-title">Popular Tags</h3>
@@ -56,7 +56,7 @@ export default function Sidebar() {
       </section>
       
       {/* Bottom sidebar ad - catches users scrolling down */}
-      <SidebarAd adSlot="2222222222" />
+      <SidebarAd adSlot="8631889160" />
     </aside>
   );
 } 
