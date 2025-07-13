@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import ArticleGrid from "../components/ArticleGrid";
 import { BannerAd } from "../components/AdSense";
-import { getAllArticles } from "../lib/articles";
 
 export default function Topics({ articles }) {
   const router = useRouter();
@@ -306,6 +305,8 @@ export default function Topics({ articles }) {
 }
 
 export async function getStaticProps() {
+  // Import articles only in server-side function
+  const { getAllArticles } = await import('../lib/articles');
   const articles = getAllArticles();
   return {
     props: {

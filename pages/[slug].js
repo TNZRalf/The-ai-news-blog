@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { getArticleBySlug, getAllArticles } from "../lib/articles";
-import { trackArticleView } from "../lib/gtag";
 import ArticleHero from "../components/ArticleHero";
 import SocialShare from "../components/SocialShare";
 import AdBlock from "../components/AdBlock";
@@ -14,8 +12,11 @@ export default function ArticlePage({ article, allArticles }) {
 
   // Track article view when component mounts
   useEffect(() => {
-    if (article) {
-      trackArticleView(article.title, article.slug);
+    if (article && typeof window !== 'undefined') {
+      // Only import gtag on client side
+      import('../lib/gtag').then(({ trackArticleView }) => {
+        trackArticleView(article.title, article.slug);
+      });
     }
   }, [article]);
 
@@ -63,6 +64,8 @@ export default function ArticlePage({ article, allArticles }) {
 }
 
 export async function getStaticPaths() {
+  // Import articles only in server-side functions
+  const { getAllArticles } = await import('../lib/articles');
   const articles = getAllArticles();
   const paths = articles.map((article) => ({
     params: { slug: article.slug },
@@ -72,6 +75,8 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  // Import articles only in server-side functions
+  const { getArticleBySlug, getAllArticles } = await import('../lib/articles');
   const article = getArticleBySlug(params.slug);
   const allArticles = getAllArticles();
   return {
