@@ -7,6 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "next lint",
+    "update-articles": "node scripts/update-weekly-articles.js",
     "migrate-blog": "node scripts/migrate-blog-content.js",
     "create-fallbacks": "node scripts/create-fallback-images.js",
     "apply-fallbacks": "node scripts/apply-fallback-images.js"
