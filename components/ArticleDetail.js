@@ -21,7 +21,7 @@ export default function ArticleDetail({ image, title, author, date, tags = [], c
       <header className="article-detail-header">
         <h1 className="article-detail-title">{title}</h1>
         <div className="article-detail-meta">
-          By {author} ({source}) · Published on {date}
+          {source} · Published on {date}
         </div>
         {tags && tags.length > 0 && (
           <div className="article-detail-tags">

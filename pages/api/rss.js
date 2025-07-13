@@ -39,7 +39,7 @@ export default function handler(req, res) {
       <link>${siteUrl}/${article.slug}</link>
       <guid isPermaLink="true">${siteUrl}/${article.slug}</guid>
       <pubDate>${new Date(article.date).toUTCString()}</pubDate>
-      <author>the.ainews0@gmail.com (${article.author})</author>
+      <author>the.ainews0@gmail.com (${article.source})</author>
       ${article.tags ? article.tags.map(tag => `<category><![CDATA[${tag}]]></category>`).join('\n      ') : ''}
       ${article.image ? `<enclosure url="${article.image}" type="image/jpeg"/>` : ''}
     </item>`).join('')}

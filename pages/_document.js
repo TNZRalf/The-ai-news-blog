@@ -9,6 +9,13 @@ export default function MyDocument() {
   return (
     <Html lang="en">
       <Head>
+        {/* Favicon and App Icons */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <meta name="theme-color" content="#FF8C00" />
+        
         {/* Google AdSense Verification Meta Tag */}
         <meta name="google-adsense-account" content="ca-pub-7342607848085265" />
         

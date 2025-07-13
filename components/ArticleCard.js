@@ -18,7 +18,7 @@ export default function ArticleCard({ title, description, image, author, date, s
         <div className="article-card-content">
           <h3 className="article-card-title">{title}</h3>
           <p className="article-card-desc">{description}</p>
-          <div className="article-card-meta">By {author} ({source}) &middot; {date}</div>
+          <div className="article-card-meta">{source} &middot; {date}</div>
         </div>
     </Link>
   );

@@ -236,7 +236,7 @@ function AdminPanel({ articles }) {
                       <div className="article-info">
                         <h4 className="article-title">{article.title}</h4>
                         <p className="article-meta">
-                          By {article.author} · {article.date} · {article.source}
+                          {article.source} · {article.date}
                         </p>
                         <div className="article-tags">
                           {(article.tags || []).slice(0, 3).map(tag => (

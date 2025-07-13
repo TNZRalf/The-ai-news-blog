@@ -32,15 +32,15 @@ export default function ArticleHero({
         <h1 className="article-hero-title">{title}</h1>
       )}
       
-      {(author || date) && (
+      {(source || date) && (
         <div className="article-hero-meta">
-          {author && date && (
-            <>By <strong>{author}</strong>{source && ` (${source})`} · Published on <time dateTime={date}>{date}</time></>
+          {source && date && (
+            <><strong>{source}</strong> · Published on <time dateTime={date}>{date}</time></>
           )}
-          {author && !date && (
-            <>By <strong>{author}</strong>{source && ` (${source})`}</>
+          {source && !date && (
+            <><strong>{source}</strong></>
           )}
-          {!author && date && (
+          {!source && date && (
             <>Published on <time dateTime={date}>{date}</time></>
           )}
         </div>
