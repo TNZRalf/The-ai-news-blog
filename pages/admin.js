@@ -1,9 +1,145 @@
 import Head from 'next/head';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { getAllArticles } from '../lib/articles';
+import { getAllArticles, getArticleStats } from '../lib/articles';
 import FileUpload from '../components/FileUpload';
 import { requireAuth, logout } from '../lib/auth';
+
+function MigrationPanel() {
+  const [migrationStatus, setMigrationStatus] = useState('idle');
+  const [migrationResult, setMigrationResult] = useState(null);
+  const [stats, setStats] = useState(null);
+
+  const handleMigration = async () => {
+    setMigrationStatus('running');
+    try {
+      const response = await fetch('/api/migrate-blog-content', {
+        method: 'POST',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Migration failed');
+      }
+      
+      const result = await response.json();
+      setMigrationResult(result);
+      setMigrationStatus('completed');
+      
+      // Refresh stats
+      fetchStats();
+    } catch (error) {
+      console.error('Migration error:', error);
+      setMigrationStatus('error');
+      setMigrationResult({ error: error.message });
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/article-stats');
+      if (response.ok) {
+        const statsData = await response.json();
+        setStats(statsData);
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="migration-panel">
+      <div className="migration-section">
+        <h3>🔄 Blog Content Migration</h3>
+        <p>
+          Migrate articles from <code>blog_content.json</code> to your website format and download images. 
+          When original images can't be downloaded, the system automatically uses contextually appropriate fallback images.
+        </p>
+        
+        <div className="migration-actions">
+          <button 
+            onClick={handleMigration}
+            disabled={migrationStatus === 'running'}
+            className={`migration-btn ${migrationStatus === 'running' ? 'running' : ''}`}
+          >
+            {migrationStatus === 'running' ? '🔄 Migrating...' : '▶️ Start Migration'}
+          </button>
+        </div>
+
+        {migrationStatus === 'running' && (
+          <div className="migration-progress">
+            <div className="progress-indicator">
+              <div className="spinner"></div>
+              <span>Processing articles, downloading images, and applying fallbacks when needed...</span>
+            </div>
+          </div>
+        )}
+
+        {migrationResult && (
+          <div className={`migration-result ${migrationStatus === 'error' ? 'error' : 'success'}`}>
+            {migrationStatus === 'error' ? (
+              <>
+                <h4>❌ Migration Failed</h4>
+                <p>{migrationResult.error}</p>
+              </>
+            ) : (
+              <>
+                <h4>✅ Migration Completed</h4>
+                <ul>
+                  <li>Total articles in source: {migrationResult.totalArticles}</li>
+                  <li>Successfully converted: {migrationResult.convertedArticles}</li>
+                  <li>Original images downloaded: {migrationResult.imagesDownloaded}</li>
+                  {migrationResult.fallbacksUsed > 0 && (
+                    <li>Fallback images used: {migrationResult.fallbacksUsed}</li>
+                  )}
+                  <li>Total articles with images: {migrationResult.totalWithImages || migrationResult.convertedArticles}</li>
+                </ul>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {stats && (
+        <div className="stats-section">
+          <h3>📊 Content Statistics</h3>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <h4>{stats.totalArticles}</h4>
+              <p>Total Articles</p>
+            </div>
+            <div className="stat-card">
+              <h4>{stats.totalWordCount?.toLocaleString()}</h4>
+              <p>Total Words</p>
+            </div>
+            <div className="stat-card">
+              <h4>{stats.articlesWithImages}</h4>
+              <p>Articles with Images</p>
+            </div>
+            <div className="stat-card">
+              <h4>{stats.sources?.length || 0}</h4>
+              <p>Content Sources</p>
+            </div>
+          </div>
+          
+          {stats.sources && stats.sources.length > 0 && (
+            <div className="sources-list">
+              <h4>Content Sources:</h4>
+              <div className="source-tags">
+                {stats.sources.map(source => (
+                  <span key={source} className="source-tag">{source}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function AdminPanel({ articles }) {
   const [activeTab, setActiveTab] = useState('articles');
@@ -46,6 +182,15 @@ function AdminPanel({ articles }) {
                 <span>Articles</span>
               </button>
               <button 
+                onClick={() => setActiveTab('migration')}
+                className={`admin-nav-item ${activeTab === 'migration' ? 'active' : ''}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                  <path d="M232,120h-8V96a24,24,0,0,0-24-24H176a24,24,0,0,0-24,24v24h-8a24,24,0,0,0-24,24v56a24,24,0,0,0,24,24h88a24,24,0,0,0,24-24V144A24,24,0,0,0,232,120ZM168,96a8,8,0,0,1,8-8h24a8,8,0,0,1,8,8v24H168ZM240,200a8,8,0,0,1-8,8H144a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h88a8,8,0,0,1,8,8ZM80,72H56A16,16,0,0,0,40,88V216a16,16,0,0,0,16,16H80a16,16,0,0,0,16-16V88A16,16,0,0,0,80,72ZM80,216H56V88H80Z" />
+                </svg>
+                <span>Migration</span>
+              </button>
+              <button 
                 onClick={() => setActiveTab('uploads')}
                 className={`admin-nav-item ${activeTab === 'uploads' ? 'active' : ''}`}
               >
@@ -68,8 +213,16 @@ function AdminPanel({ articles }) {
         </aside>
         <main className="admin-main-content">
           <header className="admin-header">
-            <h2>{activeTab === 'articles' ? 'Articles' : 'File Upload'}</h2>
-            <p>{activeTab === 'articles' ? 'Manage your website\'s content' : 'Upload images, articles, and documents'}</p>
+            <h2>
+              {activeTab === 'articles' ? 'Articles' : 
+               activeTab === 'migration' ? 'Content Migration' : 
+               'File Upload'}
+            </h2>
+            <p>
+              {activeTab === 'articles' ? 'Manage your website\'s content' : 
+               activeTab === 'migration' ? 'Migrate content from blog_content.json and download images' : 
+               'Upload images, articles, and documents'}
+            </p>
           </header>
 
           <div className="admin-content-area">
@@ -124,6 +277,8 @@ function AdminPanel({ articles }) {
                   </table>
                 </div>
               </>
+            ) : activeTab === 'migration' ? (
+              <MigrationPanel />
             ) : (
               <div className="admin-upload-section">
                 <div className="weekly-articles-section">

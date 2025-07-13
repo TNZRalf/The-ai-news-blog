@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ArticleCard({ title, description, image, author, date, slug }) {
+export default function ArticleCard({ title, description, image, author, date, slug, source }) {
   return (
     <Link href={`/${slug}`} className="article-card">
         <Image
@@ -18,7 +18,7 @@ export default function ArticleCard({ title, description, image, author, date, s
         <div className="article-card-content">
           <h3 className="article-card-title">{title}</h3>
           <p className="article-card-desc">{description}</p>
-          <div className="article-card-meta">By {author} &middot; {date}</div>
+          <div className="article-card-meta">By {author} ({source}) &middot; {date}</div>
         </div>
     </Link>
   );

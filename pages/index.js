@@ -33,7 +33,7 @@ export default function Home({ articles }) {
             {/* Article Ad - Mid-content placement for better engagement */}
             <ArticleAd adSlot="1694945729" />
           </div>
-          <Sidebar />
+          <Sidebar articles={articles} />
         </div>
       </div>
     </>

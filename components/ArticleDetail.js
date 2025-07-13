@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { BannerAd, ArticleAd } from "./AdSense";
 
-export default function ArticleDetail({ image, title, author, date, tags = [], content }) {
+export default function ArticleDetail({ image, title, author, date, tags = [], content, source }) {
   return (
     <article className="article-detail">
       {image && (
@@ -21,7 +21,7 @@ export default function ArticleDetail({ image, title, author, date, tags = [], c
       <header className="article-detail-header">
         <h1 className="article-detail-title">{title}</h1>
         <div className="article-detail-meta">
-          By {author} · Published on {date}
+          By {author} ({source}) · Published on {date}
         </div>
         {tags && tags.length > 0 && (
           <div className="article-detail-tags">
