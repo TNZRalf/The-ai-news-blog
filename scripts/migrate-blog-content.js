@@ -286,24 +286,72 @@ async function migrateBlogContent() {
       convertedArticles.push(convertedArticle);
     }
     
-    // Sort by date (newest first)
-    convertedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    // Write the converted articles to formatted_articles.json
+        // Read existing articles to merge with new ones
     const outputPath = path.join(process.cwd(), 'public', 'formatted_articles.json');
-    await fs.writeFile(outputPath, JSON.stringify(convertedArticles, null, 2));
+    let existingArticles = [];
     
-    console.log(`Migration completed! Converted ${convertedArticles.length} articles.`);
+    try {
+      const existingArticlesRaw = await fs.readFile(outputPath, 'utf-8');
+      existingArticles = JSON.parse(existingArticlesRaw);
+      console.log(`Found ${existingArticles.length} existing articles to merge with`);
+    } catch (error) {
+      console.log('No existing articles found, creating new file');
+    }
+    
+    // Create sets for deduplication based on title and original URL
+    const existingTitles = new Set(existingArticles.map(article => article.title.toLowerCase()));
+    const existingUrls = new Set(existingArticles.map(article => article.originalUrl).filter(Boolean));
+    
+    // Filter out duplicates from new articles
+    const uniqueNewArticles = convertedArticles.filter(article => {
+      const titleMatch = existingTitles.has(article.title.toLowerCase());
+      const urlMatch = article.originalUrl && existingUrls.has(article.originalUrl);
+      
+      if (titleMatch || urlMatch) {
+        console.log(`🔄 Skipping duplicate article: "${article.title}"`);
+        return false;
+      }
+      return true;
+    });
+    
+    // Assign new IDs to avoid conflicts
+    let nextId = existingArticles.length > 0 ? Math.max(...existingArticles.map(a => a.id), 0) + 1 : 1;
+    uniqueNewArticles.forEach(article => {
+      article.id = nextId++;
+    });
+    
+    // Merge articles: keep existing articles and add new unique ones
+    const allArticles = [...existingArticles, ...uniqueNewArticles];
+    
+    // Sort by date (newest first)
+    allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Create backup of existing articles before writing new ones
+    if (existingArticles.length > 0) {
+      const backupPath = path.join(process.cwd(), 'public', `formatted_articles_backup_${Date.now()}.json`);
+      await fs.writeFile(backupPath, JSON.stringify(existingArticles, null, 2));
+      console.log(`💾 Backup of existing articles created: ${path.basename(backupPath)}`);
+    }
+
+    // Write the merged articles to formatted_articles.json
+    await fs.writeFile(outputPath, JSON.stringify(allArticles, null, 2));
+    
+    convertedArticles = uniqueNewArticles; // Update for return stats
+    
+        console.log(`Migration completed! Converted ${convertedArticles.length} new articles.`);
+    console.log(`Total articles in blog: ${allArticles.length}`);
     console.log(`Articles written to: ${outputPath}`);
-    
+
     // Create a backup of the original blog_content.json
     const backupPath = path.join(process.cwd(), 'public', 'blog_content_backup.json');
     await fs.copyFile(blogContentPath, backupPath);
     console.log(`Backup created: ${backupPath}`);
-    
+
     return {
       totalArticles: blogContent.articles.length,
       convertedArticles: convertedArticles.length,
+      existingArticles: existingArticles.length,
+      totalInBlog: allArticles.length,
       imagesDownloaded: imagesDownloaded,
       fallbacksUsed: fallbacksUsed,
       totalWithImages: imagesDownloaded + fallbacksUsed
@@ -321,7 +369,9 @@ if (require.main === module) {
     .then(result => {
       console.log('\n=== Migration Summary ===');
       console.log(`Total articles in source: ${result.totalArticles}`);
-      console.log(`Successfully converted: ${result.convertedArticles}`);
+      console.log(`New articles converted: ${result.convertedArticles}`);
+      console.log(`Existing articles preserved: ${result.existingArticles || 0}`);
+      console.log(`Total articles in blog: ${result.totalInBlog}`);
       console.log(`Original images downloaded: ${result.imagesDownloaded}`);
       console.log(`Fallback images used: ${result.fallbacksUsed}`);
       console.log(`Total articles with images: ${result.totalWithImages}`);

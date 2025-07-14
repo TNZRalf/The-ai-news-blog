@@ -87,7 +87,9 @@ async function updateWeeklyArticles() {
     
     console.log('\n=== Weekly Update Complete ===');
     console.log(`📊 Total articles processed: ${result.totalArticles}`);
-    console.log(`✅ Successfully converted: ${result.convertedArticles}`);
+    console.log(`✅ New articles added: ${result.convertedArticles}`);
+    console.log(`📚 Existing articles preserved: ${result.existingArticles || 0}`);
+    console.log(`📖 Total articles in blog: ${result.totalInBlog}`);
     console.log(`🖼️  Images downloaded: ${result.imagesDownloaded}`);
     console.log(`🎨 Fallback images used: ${result.fallbacksUsed}`);
     console.log('🎉 Your blog is updated and ready!');
