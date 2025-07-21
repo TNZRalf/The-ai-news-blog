@@ -223,7 +223,7 @@ async function migrateBlogContent() {
     await fs.mkdir(imagesDir, { recursive: true });
     
     // Convert articles to the website format
-    const convertedArticles = [];
+    let convertedArticles = [];
     let articleId = 1;
     let imagesDownloaded = 0;
     let fallbacksUsed = 0;
