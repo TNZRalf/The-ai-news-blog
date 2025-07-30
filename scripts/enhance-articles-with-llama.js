@@ -24,6 +24,7 @@ CRITICAL REQUIREMENTS:
 3. ERROR CORRECTION: Fix any factual errors, broken sentences, or unclear passages
 4. QUALITY IMPROVEMENT: Make the content more engaging and appealing to read
 5. COMPREHENSIVE COVERAGE: Ensure the content thoroughly addresses the article topic
+6. NO META-COMMENTARY: Do NOT include any meta-commentary, explanations about what you're doing, or notes about the rewriting process
 
 JOURNALISTIC GUIDELINES:
 - Write as an objective reporter covering the story
@@ -47,12 +48,23 @@ CONTENT CLEANUP REQUIREMENTS:
 - Make sure the content actually answers or addresses the article title
 - Remove any content that seems to be from a different article or source
 
+CRITICAL OUTPUT REQUIREMENTS:
+- Output ONLY the rewritten article content
+- Do NOT include any meta-commentary like "Okay, here's a revised version..."
+- Do NOT include any notes about changes made or improvements
+- Do NOT include any explanations about the rewriting process
+- Do NOT include any "Key Improvements & Changes" sections
+- Do NOT include any "Note:" sections at the end
+- Start directly with the article content
+- End directly with the article content
+- The output should be ready for immediate publication
+
 IMPORTANT: Write in professional third-person reporting style throughout. Do not use "I", "me", "my", or "we" in the content.
 
 Original article title: {title}
 Original content: {content}
 
-Please rewrite this content to be more engaging, comprehensive, and professionally written in third-person reporting style. Clean up any nonsensical content and ensure everything makes sense in context:`;
+Rewrite this content to be more engaging, comprehensive, and professionally written in third-person reporting style. Output ONLY the rewritten article content with no meta-commentary:`;
 
 async function callLlama(prompt) {
   return new Promise((resolve, reject) => {
