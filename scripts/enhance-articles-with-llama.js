@@ -25,6 +25,7 @@ CRITICAL REQUIREMENTS:
 4. QUALITY IMPROVEMENT: Make the content more engaging and appealing to read
 5. COMPREHENSIVE COVERAGE: Ensure the content thoroughly addresses the article topic
 6. NO META-COMMENTARY: Do NOT include any meta-commentary, explanations about what you're doing, or notes about the rewriting process
+7. PROPER FORMATTING: Use proper HTML formatting, NOT markdown
 
 JOURNALISTIC GUIDELINES:
 - Write as an objective reporter covering the story
@@ -47,6 +48,21 @@ CONTENT CLEANUP REQUIREMENTS:
 - Ensure all paragraphs flow logically from one to the next
 - Make sure the content actually answers or addresses the article title
 - Remove any content that seems to be from a different article or source
+- Remove ALL placeholder text like "[Insert Link to WIRED Subscription Page - Placeholder]"
+- Remove any subscription prompts, newsletter signups, or promotional content
+- Remove any "Read more" or "Continue reading" links
+
+FORMATTING REQUIREMENTS:
+- Use proper HTML tags: <h2> for main headings, <h3> for subheadings, <p> for paragraphs, <strong> for bold text, <em> for italic text
+- Do NOT use markdown formatting like **bold** or ## headings
+- Do NOT use bullet points with * or - symbols
+- Structure content with proper HTML paragraphs and headings
+- Make content web-ready and properly formatted
+
+TITLE REQUIREMENTS:
+- If the original title contains first-person language like "You Asked, We Answered" or "Join Our Livestream", rewrite it in third-person
+- Make titles objective and professional
+- Ensure titles reflect the actual content of the article
 
 CRITICAL OUTPUT REQUIREMENTS:
 - Output ONLY the rewritten article content
@@ -55,6 +71,7 @@ CRITICAL OUTPUT REQUIREMENTS:
 - Do NOT include any explanations about the rewriting process
 - Do NOT include any "Key Improvements & Changes" sections
 - Do NOT include any "Note:" sections at the end
+- Do NOT include any placeholder text or subscription prompts
 - Start directly with the article content
 - End directly with the article content
 - The output should be ready for immediate publication
@@ -64,7 +81,7 @@ IMPORTANT: Write in professional third-person reporting style throughout. Do not
 Original article title: {title}
 Original content: {content}
 
-Rewrite this content to be more engaging, comprehensive, and professionally written in third-person reporting style. Output ONLY the rewritten article content with no meta-commentary:`;
+Rewrite this content to be more engaging, comprehensive, and professionally written in third-person reporting style. Use proper HTML formatting and remove all placeholders. Output ONLY the rewritten article content:`;
 
 async function callLlama(prompt) {
   return new Promise((resolve, reject) => {
@@ -161,8 +178,29 @@ async function enhanceArticleContent(article) {
   try {
     console.log(`🔄 Enhancing article: "${article.title}"`);
     
+    // Check if title needs rewriting (contains first-person language)
+    const needsTitleRewrite = /you asked|we answered|join our|our livestream|we're|we are/i.test(article.title);
+    
+    let enhancedTitle = article.title;
+    if (needsTitleRewrite) {
+      console.log(`   📝 Title needs rewriting: "${article.title}"`);
+      const titlePrompt = `Rewrite this title in third-person, professional journalistic style. Make it objective and remove any first-person language. Output ONLY the rewritten title:
+
+Original title: ${article.title}
+
+Rewritten title:`;
+      
+      try {
+        const rewrittenTitle = await callLlama(titlePrompt);
+        enhancedTitle = rewrittenTitle.trim().replace(/^["']|["']$/g, ''); // Remove quotes if present
+        console.log(`   ✅ Title rewritten: "${enhancedTitle}"`);
+      } catch (error) {
+        console.log(`   ⚠️  Title rewriting failed, keeping original: "${article.title}"`);
+      }
+    }
+    
     const prompt = ENHANCEMENT_PROMPT
-      .replace('{title}', article.title)
+      .replace('{title}', enhancedTitle)
       .replace('{content}', article.content);
     
     const enhancedContent = await callLlama(prompt);
@@ -184,27 +222,43 @@ async function enhanceArticleContent(article) {
       }
     }
     
+    // Additional cleanup for placeholders and markdown
+    cleanedContent = cleanedContent
+      .replace(/\[Insert Link to WIRED Subscription Page - Placeholder\]/g, '')
+      .replace(/\[.*?\]/g, '') // Remove any remaining bracket placeholders
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Convert markdown bold to HTML
+      .replace(/##\s*(.*?)(?:\n|$)/g, '<h2>$1</h2>') // Convert markdown headers to HTML
+      .replace(/###\s*(.*?)(?:\n|$)/g, '<h3>$1</h3>') // Convert markdown subheaders to HTML
+      .replace(/\*\s+(.*?)(?:\n|$)/g, '<li>$1</li>') // Convert markdown bullets to HTML
+      .replace(/(<li>.*<\/li>\s*)+/g, function(match) { // Wrap list items in ul tags
+        return '<ul>\n' + match + '\n</ul>';
+      })
+      .replace(/^\s*[-*]\s+/gm, '') // Remove any remaining markdown bullets
+      .replace(/\n\s*\n\s*\n/g, '\n\n') // Normalize paragraph breaks
+      .trim();
+    
     // Debug: Log content length before validation
     console.log(`   📏 Enhanced content length: ${cleanedContent.length} characters`);
     
     // Validate the enhanced content
-    const validation = validateEnhancedContent(article.title, cleanedContent);
+    const validation = validateEnhancedContent(enhancedTitle, cleanedContent);
     
     if (!validation.isValid) {
-      console.log(`⚠️  Warning: Enhanced content validation failed for "${article.title}" - ${validation.reason}, keeping original`);
+      console.log(`⚠️  Warning: Enhanced content validation failed for "${enhancedTitle}" - ${validation.reason}, keeping original`);
       return article;
     }
     
     // Check if content is too short (very lenient threshold)
     if (!cleanedContent || cleanedContent.length < 20) {
-      console.log(`⚠️  Warning: Enhanced content seems too short for "${article.title}", keeping original`);
+      console.log(`⚠️  Warning: Enhanced content seems too short for "${enhancedTitle}", keeping original`);
       return article;
     }
     
-    console.log(`✅ Successfully enhanced article: "${article.title}"`);
+    console.log(`✅ Successfully enhanced article: "${enhancedTitle}"`);
     
     return {
       ...article,
+      title: enhancedTitle,
       content: cleanedContent,
       enhanced: true,
       enhancedAt: new Date().toISOString()
