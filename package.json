@@ -12,7 +12,8 @@
     "migrate-blog": "node scripts/migrate-blog-content.js",
     "recover-articles": "node scripts/recover-articles.js",
     "create-fallbacks": "node scripts/create-fallback-images.js",
-    "apply-fallbacks": "node scripts/apply-fallback-images.js"
+    "apply-fallbacks": "node scripts/apply-fallback-images.js",
+    "enhance-articles": "node scripts/enhance-articles-with-llama.js"
   },
   "repository": {
     "type": "git",

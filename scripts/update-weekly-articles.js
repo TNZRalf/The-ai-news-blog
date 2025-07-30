@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const { migrateBlogContent } = require('./migrate-blog-content');
+const { enhanceNewArticlesOnly } = require('./enhance-articles-with-llama');
 
 async function findNewContentFile() {
   const newContentDir = path.join(process.cwd(), 'public', 'new blog content');
@@ -85,6 +86,65 @@ async function updateWeeklyArticles() {
     console.log('🚀 Starting article migration...');
     const result = await migrateBlogContent();
     
+    // Get the IDs of newly added articles for targeted enhancement
+    let newArticleIds = [];
+    if (result.convertedArticles > 0) {
+      try {
+        const formattedArticlesPath = path.join(process.cwd(), 'public', 'formatted_articles.json');
+        const articlesData = await fs.readFile(formattedArticlesPath, 'utf-8');
+        const articles = JSON.parse(articlesData);
+        
+        // Get the IDs of the most recent articles (assuming they're added at the end)
+        const totalArticles = articles.length;
+        const startIndex = Math.max(0, totalArticles - result.convertedArticles);
+        newArticleIds = articles.slice(startIndex).map(article => article.id);
+        
+        console.log(`🎯 Identified ${newArticleIds.length} new articles for enhancement`);
+      } catch (error) {
+        console.log('⚠️  Could not identify new articles, will enhance all articles');
+      }
+    }
+    
+    // Enhance only new articles with Llama for better readability
+    console.log('\n🎨 Starting article enhancement with Llama...');
+    try {
+      const enhancementResult = await enhanceNewArticlesOnly(newArticleIds);
+      console.log(`✨ Enhanced ${enhancementResult.enhancedArticles} out of ${enhancementResult.totalArticles} articles`);
+      
+      // Replace the formatted articles with enhanced version
+      const enhancedPath = path.join(process.cwd(), 'public', 'formatted_articles_enhanced.json');
+      const formattedPath = path.join(process.cwd(), 'public', 'formatted_articles.json');
+      
+      // Check if enhanced file exists and has content
+      try {
+        const enhancedData = await fs.readFile(enhancedPath, 'utf-8');
+        const enhancedArticles = JSON.parse(enhancedData);
+        
+        if (enhancedArticles.length > 0) {
+          // Create backup of current formatted articles
+          const formattedBackupPath = path.join(process.cwd(), 'public', `formatted_articles_backup_before_enhancement_${Date.now()}.json`);
+          await fs.copyFile(formattedPath, formattedBackupPath);
+          console.log(`💾 Backed up current formatted articles to: ${path.basename(formattedBackupPath)}`);
+          
+          // Replace with enhanced version
+          await fs.copyFile(enhancedPath, formattedPath);
+          console.log('✅ Replaced formatted articles with enhanced version');
+          
+          // Clean up enhanced file
+          await fs.unlink(enhancedPath);
+          console.log('🗑️  Cleaned up temporary enhanced file');
+        } else {
+          console.log('⚠️  Enhanced file is empty, keeping original articles');
+        }
+      } catch (error) {
+        console.log('⚠️  Could not replace with enhanced version, keeping original articles');
+      }
+      
+    } catch (enhancementError) {
+      console.log('⚠️  Article enhancement failed, continuing with original articles');
+      console.log(`   Error: ${enhancementError.message}`);
+    }
+    
     console.log('\n=== Weekly Update Complete ===');
     console.log(`📊 Total articles processed: ${result.totalArticles}`);
     console.log(`✅ New articles added: ${result.convertedArticles}`);
@@ -92,7 +152,7 @@ async function updateWeeklyArticles() {
     console.log(`📖 Total articles in blog: ${result.totalInBlog}`);
     console.log(`🖼️  Images downloaded: ${result.imagesDownloaded}`);
     console.log(`🎨 Fallback images used: ${result.fallbacksUsed}`);
-    console.log('🎉 Your blog is updated and ready!');
+    console.log('🎉 Your blog is updated and enhanced!');
     
     return result;
     
